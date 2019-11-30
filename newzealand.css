@@ -3,9 +3,18 @@ nav ul li{
   display: inline;
   color: white;
 }
-nav {
+#top {
   background-color: black;
 }
 li {
+  display: inline;
+}
+#ph {
+  color: white;
+}
+#pho {
+  color: white;
+}
+div ul li {
   display: inline;
 }

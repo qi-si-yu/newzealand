@@ -1,0 +1,56 @@
+/* 
+This script contains the TNZ Google Global Site Tag (gtag.js)
+A global site tag is made up of two snippets of JavaScript: a global snippet and event snippets 
+The global snippet is triggered on Visit only, but Event snippets are triggered on Visit, Active Visit & Referrals (see global DTM rules)
+
+More info: https://support.google.com/dcm/partner/answer/7568534?hl=en
+
+NO CHANGES SHOULD BE MADE TO THIS DTM RULE OR THIS SCRIPT BLOCK WITHOUT CONSULTING WITH: 
+corban.caudle[at]sapientrazorfish.com AND  tnz.rzf.team.global[at]publicisgroupe.net
+*/
+
+/* Global Site Tag (gtag.js) - Global snippet */
+_satellite.loadScript('https://www.googletagmanager.com/gtag/js?id=AW-879038775');
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-879038775');
+gtag('config', 'AW-966757256');
+gtag('config', 'AW-1021916199');
+gtag('config', 'AW-951211400');
+gtag('config', 'AW-880171027');
+gtag('config', 'AW-877123820');
+gtag('config', 'DC-819623');
+gtag('config', 'DC-6812680');
+gtag('config', 'DC-8312686');
+gtag('config', 'AW-1006206456');
+
+
+/* Global Site Tag (gtag.js) - Event snippets */
+
+//DoubleClick Floodlight - Pure Visits
+gtag('event', 'conversion', {
+  'allow_custom_scripts': true,
+  'session_id': _satellite.getVar('sessionid'),
+  'u1': _satellite.getVar('getPageURL'),
+  'u2': _satellite.getVar('getPageTitle'),
+  'u3': '[s3]',
+  'u4': '[s4]',
+  'u5': '[s5]',
+  'u16': _satellite.getVar('mcmidForIdMatching'),
+  'send_to': 'DC-6812680/tnz_00/tnzgl0+per_session'
+});
+
+//Doubleclick Floodlight - Pure Pageviews
+gtag('event', 'conversion', {
+ 'allow_custom_scripts': true,
+ 'u1': '[s1]',
+ 'send_to': 'DC-6812680/tnz_00/tnz_pgv+standard'
+});
+
+//Doubleclick Bid Manager Floodlight - DBM Pure Visits
+gtag('event', 'conversion', {
+  'allow_custom_scripts': true,
+  'send_to': 'DC-8312686/invmedia/gmp9d7aj+standard'
+});

@@ -1,0 +1,72 @@
+_satellite.pushAsyncScript(function(event, target, $variables){
+  if(!!_satellite.readCookie("__dtm_forceactivevisit")){
+  _satellite.removeCookie('avtriggered');
+  setTimeout(function(){
+     _satellite.removeCookie('__dtm_forceactivevisit');
+  },2500);
+
+  /* force the reset of an active visit when GDPR OK button is clicked.
+  As we reload the page we need the marketing tags to run after page reload.
+  The cookie '__dtm_forceactivevisit' is set within the sites js code.
+   It is deleted after 2.5 seconds, this should give enough time for the page to load and 
+   marketing tags run.
+  */
+}
+
+if( !_satellite.readCookie("avtriggered") && !!window.__avtriggered == false)
+{
+  window.__avtriggered = true;//to prevent loops occuring
+  _satellite.setCookie('avtriggered','true',0);//set the session cookie
+	for( var i = _satellite.directCallRules.length ; i-- ; )
+	{
+		var oRule = _satellite.directCallRules[i];
+		var sName = oRule.name;
+		var iNow	= (new Date()).getTime();
+    
+		var sLowercaseName = sName.toLowerCase();
+		if(sLowercaseName.indexOf("activevisit") === 0)//it starts with "activevisit"
+		{
+			
+			//is it scoped to any markets?
+			var b = true;
+			aMarkets = sName.split(",");
+			aMarkets = aMarkets.slice(1,aMarkets.length);
+
+			if(aMarkets.length !== 0 )
+			{
+				sRegex = "^(/" + aMarkets.join("/|/") + "/)";
+				var re = new RegExp( sRegex );
+				b = ( window.location.pathname.search( re ) === 0 );
+			}
+      
+       //it's a marketing tag
+      if(b && sName.toLowerCase().indexOf('marketing') !== -1 )
+      {        
+        b = (_satellite.getVar('load_marketing_tags') === 'true');
+      }
+			
+			if(b)
+			{
+	          //shouldn't need all this if we can get the scheduling working as expected
+				if(
+					!oRule.schedule //if there is not schedule, we fire it all the time
+					|| (
+						//if there is a schedule,check it ends after now
+						!!oRule.schedule 
+						&& oRule.schedule.end.getTime() > iNow
+					)
+          || (
+						//ie8 does it differently/wrong
+						!!oRule.schedule 
+						&& oRule.schedule.end == "NaN"
+						
+					)
+				)				
+				{       
+					_satellite.track(sName);
+				}
+			}
+		}
+	}
+}
+});

@@ -1,0 +1,152 @@
+//create local references to the heartbeat classes
+var MediaHeartbeat = ADB.va.MediaHeartbeat;
+var MediaHeartbeatConfig = ADB.va.MediaHeartbeatConfig;
+var MediaHeartbeatDelegate = ADB.va.MediaHeartbeatDelegate;
+
+//Media Heartbeat initialization
+var mediaConfig = new MediaHeartbeatConfig();
+mediaConfig.trackingServer = "tourismnz.hb.omtrdc.net";
+mediaConfig.playerName = "YouTube iFrame";
+mediaConfig.channel = "Video Channel";
+mediaConfig.debugLogging = false;
+mediaConfig.appVersion = "2.0";
+mediaConfig.ssl = window.location.protocol === "https:" ? true : false;
+mediaConfig.ovp = "HTML5";
+
+//Media Heartbeat Delegate
+var mediaDelegate = new MediaHeartbeatDelegate();
+
+//if (0 === $("#youtube-api").length) {
+
+//Script loaded through TNZ Pattern Library
+/*
+if (!!document.getElementById("youtube-api") === false) {
+    // Loads IFrame Player API Code asynchronously 
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    tag.id = "youtube-api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+*/
+
+//window.onYouTubeIframeAPIReady  loaded through TNZ Pattern Library
+/*
+if (typeof(onYouTubeIframeAPIReady) !== typeof(Function)) {
+    // for carouselvideo only. footer should has the function defined.
+  
+    window.onYouTubeIframeAPIReady = function() {
+      _satellite.notify("--onYouTubeIframeAPIReady is called: m-youtube --");
+      TNZ.Util.console.log("onYouTubeIframeAPIReady :: PETE ==== ");
+      window.onYouTubeIframeAPIReadyFunctionFired = true;//
+      
+       try{
+         // The YT Player set up is handled by the TNZ Pattern Library
+         // But it will apply and call the same 
+         //  'onStateChange': window.onPlayerStateChange event/function listed in here
+         
+         
+						var sOrigin = document.location.protocol +'//' + document.location.hostname;
+            window.player = new YT.Player(window.heartBeatYoutubePlayerID, {
+              	origin:sOrigin,
+                'events': {
+                    'onStateChange': window.onPlayerStateChange
+                }
+            });
+         		
+         
+         TNZ.EventManager.trigger('TNZ.VideoPlayer.YouTubeAPILoaded',{'detail':{fromDTM:true}});
+                  
+        } catch(e){
+        	TNZ.Util.console.log("--PLAYER ERROR: m-youtube --",e);
+          TNZ.EventManager.trigger('TNZ.VideoPlayer.YouTubeAPILoaded',{'detail':{fromDTM:true}});
+        }
+    }
+    
+}
+*/
+
+//window.onPlayerStateChange  IS still called for heartbeat from TNZ Pattern Library
+//When youtube videos are created.
+window.onPlayerStateChange=function(event) {
+  	_satellite.notify("--onPlayerStateChange: m-youtube --");
+  	TNZ.Util.console.log("onPlayerStateChange :: PETE ==== ",event);
+    if (event.data == YT.PlayerState.PLAYING) {
+       	try{
+          if (Math.floor(event.target.getCurrentTime()) == 0) {
+            //clear the vars : Pete. D>A>N
+							s_dtm.clearVars();
+            
+              console.log("***HB Start");
+              /*Set mediaDelegate Current Playbacktime */
+              mediaDelegate.getCurrentPlaybackTime = function() {
+                  return Math.floor(event.target.getCurrentTime());
+              };
+              /*Set media info */
+              /* MediaHeartbeat.createMediaObject(<VIDEO_NAME>, <VIDEO_ID>, <VIDEO_LENGTH>,MediaHeartbeat.StreamType.VOD);*/
+              var mediaInfo = MediaHeartbeat.createMediaObject(
+                  event.target.getVideoData().title,
+                  event.target.getVideoData().video_id,
+                  Math.floor(event.target.getDuration()),
+                  MediaHeartbeat.StreamType.VOD);
+              /*Set custom context data*/
+              var contextData = {
+                  //pageURL: player.baseURI,
+                  //playerHeigh: player.width, 
+                  //playerWidth: player.height,
+                  //tagName: player.tagName,
+                  //videoURL: player.src
+              };
+              /*Set standard video metadata*/
+              //var standardVideoMetadata = {};
+              //standardVideoMetadata[MediaHeartbeat.VideoMetadataKeys.EPISODE] = "Sample Episode";
+              //standardVideoMetadata[MediaHeartbeat.VideoMetadataKeys.SHOW] = "Sample Show";
+              //mediaInfo.setValue(MediaHeartbeat.MediaObjectKey.StandardVideoMetadata, standardVideoMetadata);
+              //Create media Heartbeat instance
+              s_dtm.linkTrackVars = "";
+              s_dtm.linkTrackEvents = "";
+              _satellite.notify("Heartbeat: emptied s_dtm configs: " + s_dtm.linkTrackVars + s_dtm.linkTrackEvents);
+              this.mediaHeartbeat = new MediaHeartbeat(mediaDelegate, mediaConfig, s_dtm);
+              this.mediaHeartbeat.trackSessionStart(mediaInfo, contextData);
+              this.mediaHeartbeat.trackPlay();
+              var videostarted = true;
+          } else {
+              console.log("***HB Else Play");
+            	_satellite.track("youtube-custom-video-resume");
+              this.mediaHeartbeat.trackPlay();
+          };
+        }catch(e){
+          TNZ.Util.console.log("Error in onPlayerStateChange :YT.PlayerState.PLAYING ==== ",e);
+        }
+    }
+
+    if (event.data == YT.PlayerState.PAUSED) {
+        console.log("***HB Pause");
+        this.mediaHeartbeat.trackPause();
+      	TNZ.Util.console.log("trigger:TNZ.YouTubePlayerState.Paused ==== ");
+    }
+
+    if (event.data == YT.PlayerState.BUFFERING) {
+        console.log("***HB Buffering");
+        if (videostarted) {
+            this._mediaHeartbeat.trackEvent(MediaHeartbeat.Event.BufferStart);
+        }
+    }
+
+    if (event.data == YT.PlayerState.ENDED) {
+        console.log("***HB Ended");
+        this.mediaHeartbeat.trackComplete();
+        this.mediaHeartbeat.trackSessionEnd();
+        var videostarted = false;
+        s_dtm.linkTrackVars = "None";
+        s_dtm.linkTrackEvents = "None";
+      	
+      TNZ.Util.console.log("trigger:TNZ.YouTubePlayerState.Ended",event);
+        try {
+          TNZ.EventManager.trigger('TNZ.YouTubePlayerState.Ended',{event:event,data:event.data,YT:YT});
+        } catch (error) {
+          //catch error do nothing
+          TNZ.Util.console.log("trigger:TNZ.YouTubePlayerState.Ended ==== ERROR ===== ");
+        }
+    }
+}

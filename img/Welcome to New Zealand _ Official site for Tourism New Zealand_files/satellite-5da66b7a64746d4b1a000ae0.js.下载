@@ -1,0 +1,137 @@
+
+var _TNZAdjustNotificationHeight=function(){
+    if(TNZ.DTM.getVar('isProxy') === "true"){
+        //Adjust height for old DAN busines page header
+        var	$_header = $('#global-header');
+        var	$_sticky_header = $('#sticky-header');
+        var $_global_header = $('.module-globalheader');
+        
+        var $notificationHeader = $('#notification-header');
+        var notification_height = $notificationHeader.outerHeight();
+
+        $_header.css({ top: notification_height });
+        $_sticky_header.css({ top: notification_height });
+        $_global_header.height( $_global_header.outerHeight() + notification_height );
+
+    }else{
+        var $notificationHeader = $('#notification-header');
+        var $header             = $('#sticky-header');
+
+        var header_height       = $header.outerHeight();
+        var notification_height = $notificationHeader.outerHeight();
+        var total_height        = header_height + notification_height;
+
+        //if busines listing css then we only use notification_height
+        var aMatchingPath = TNZ.Util.getAddedCSSFilesArray().filter(function (cssFilePath) {
+            return cssFilePath.indexOf('/css/campaigns/business-listing-layout.css') != -1;
+        });
+        if(aMatchingPath.length) total_height = notification_height;
+        $('#js-global-header').height(total_height);
+
+        $header.css('top', notification_height);
+    }
+}
+
+
+var TNZNotification = function(){
+    var frag = document.createDocumentFragment();
+    var tempDiv = document.createElement('div');
+
+    var sContentHTML =  '<div id="notification-header" class="notification notification--sticky-header" lang="zh-cn"><div class="constrained-wrapper"><p> 開始規劃您的紐西蘭假期，<a href="https://www.newzealand.com/int/campaign/taiwan">點選此處瀏覽台灣繁體中文網頁</a></p></div></div>';
+
+
+    tempDiv.innerHTML = sContentHTML;
+    frag.appendChild(tempDiv);
+    
+    
+    //Adjust height
+    if(TNZ.DTM.getVar('isProxy') === "true"){
+        //Adjust height for old DAN busines page header
+        var	$_header = $('#global-header');
+        var	$_sticky_header = $('#sticky-header');
+        var $_global_header = $('.module-globalheader');
+       
+
+        if($_global_header.length < 1) {
+			// add wrapper in alacrity
+			$_header.wrap( "<div class='module-globalheader' />");
+			var $_global_header = $('.module-globalheader');
+			$_header.prependTo($_global_header);
+        }
+
+        $_global_header[0].insertBefore(frag.children[0].firstElementChild, $_global_header[0].firstChild);
+
+        $('body').addClass('sticky-header--hidden');
+
+    }else{
+
+        document.body.insertBefore(frag, document.body.firstChild);
+    }
+    _TNZAdjustNotificationHeight();
+    TNZ.EventManager.bind("TNZ.Resize.End", _TNZAdjustNotificationHeight);
+
+    
+};
+
+var TNZNotificationCSS = function(){ 
+    var styleContent = "@charset 'UTF-8';.notification{background-color:#21627c;color:#fff;padding-bottom:20px;padding-top:20px;position:relative;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}.notification :first-child{margin-top:0}.notification :last-child{margin-bottom:0}.notification .o-link,.notification .o-link:active,.notification .o-link:focus,.notification .o-link:hover,.notification a,.notification a:active,.notification a:focus,.notification a:hover{color:#55beff}.notification label[for]{cursor:pointer}.notification a,.notification label,.notification legend,.notification p{font-size:16px}.notification .constrained-wrapper{margin-left:auto;margin-right:auto;max-width:965px;padding-left:20px;padding-right:20px;position:relative}.notification .constrained-wrapper:after,.notification .constrained-wrapper:before{content:' ';display:table}.notification .constrained-wrapper:after{clear:both}.notification+.c-pagehead{position:relative;z-index:99}.notification:lang(zh) *{font-family:National,'Arial Unicode MS',sans-serif}.notification:lang(ja) *{font-family:National,'Arial Unicode MS',sans-serif}.notification:lang(ko) *{font-family:National,'Apple SD Gothic Neo Medium','애플 SD 산돌고딕 Neo Medium','Nanum Gothic Regular','나눔고딕 Regular','HCR Dotum Regular','AppleGothic Regular','AppleGothic 일반체','Arial Unicode MS',sans-serif}.notification--sticky-header{left:0;position:fixed;right:0;top:0;z-index:9999}.notification__row+.notification__row{margin-top:20px}.notification__row--border{border-top:1px solid #2db6e8;padding-top:20px}@media (max-width:639px){.notification__sidebar{margin-top:20px}}@media (min-width:640px){.notification__row{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}.notification__sidebar{-webkit-box-sizing:border-box;box-sizing:border-box;padding-left:20px;width:34%}.notification__main{width:66%}}@media (min-width:768px){.notification__sidebar{width:25%}.notification__main{width:75%}}@media (min-width:1024px){.notification__sidebar{width:17%}.notification__main{width:83%}}.notification__close{background-color:transparent;border-radius:0;border-width:0;-webkit-box-sizing:border-box;box-sizing:border-box;color:#0093de;cursor:pointer;display:inline-block;line-height:1;padding:0;color:#fff;padding:8px;padding-top:6px;position:absolute;top:0;right:0}.notification__close svg{height:13px;width:13px}.notification__close:focus .o-icon,.notification__close:hover .o-icon{-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.notification__close .o-icon{margin-right:0;-webkit-transition:-webkit-transform 250ms ease-in-out;transition:-webkit-transform 250ms ease-in-out;transition:transform 250ms ease-in-out;transition:transform 250ms ease-in-out,-webkit-transform 250ms ease-in-out}@media (max-width:639px){.notification--text-14\@phablet\- a,.notification--text-14\@phablet\- label,.notification--text-14\@phablet\- legend,.notification--text-14\@phablet\- p{font-size:14px}}.o-toggle{font-size:14px;font-weight:700;margin-top:3px;position:relative;overflow:hidden;text-transform:uppercase}.o-toggle__input{position:absolute;left:0;top:0;-webkit-transform:translate(-100%,-100%);-ms-transform:translate(-100%,-100%);transform:translate(-100%,-100%);opacity:0;visibility:hidden}.o-toggle__wrapper{background-color:#a94442;border-radius:3px;-webkit-box-shadow:inset 0 0 3px rgba(0,0,0,.5);box-shadow:inset 0 0 3px rgba(0,0,0,.5);display:table;position:relative}.o-toggle__wrapper:after{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background-color:#d8d8d8;border-radius:3px;bottom:0;-webkit-box-shadow:3px 0 3px 0 rgba(0,0,0,.2);box-shadow:3px 0 3px 0 rgba(0,0,0,.2);color:rgba(0,0,0,.2);content:'';display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;left:0;position:absolute;text-align:center;top:0;-webkit-transition:background-color .2s,left .2s,-webkit-box-shadow .2s;transition:background-color .2s,left .2s,-webkit-box-shadow .2s;transition:background-color .2s,box-shadow .2s,left .2s;transition:background-color .2s,box-shadow .2s,left .2s,-webkit-box-shadow .2s;vertical-align:middle;width:50%}.o-toggle__input:checked+.o-toggle__wrapper{background-color:#3c763d}.o-toggle__input:checked+.o-toggle__wrapper:after{-webkit-box-shadow:-3px 0 3px 0 rgba(0,0,0,.2);box-shadow:-3px 0 3px 0 rgba(0,0,0,.2);left:50%}.o-toggle__row{display:table-row}.o-toggle__row:after{content:attr(data-no)}.o-toggle__item,.o-toggle__row:after{display:table-cell;padding:5px 10px;text-align:center;width:50%}";
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var style = document.createElement('style');
+
+    head.appendChild(style);
+
+    style.type = 'text/css';
+    if (style.styleSheet){
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = styleContent;
+    } else {
+        style.appendChild(document.createTextNode(styleContent));
+    }
+}
+
+TNZ.Util.getAddedCSSFilesArray = TNZ.Util.getAddedCSSFilesArray || function() {
+    var href,cssFilesAddedArray=[],aSheets = document.querySelectorAll('link[as="style"]');//Find any style sheets
+    for(var i=0,l=aSheets.length; i <l;i++){
+        href = aSheets[i].getAttribute('href');
+        if(href.charAt(0) === '/' || href.indexOf(document.location.origin) != -1){
+            cssFilesAddedArray.push(href);
+        } 
+    };
+    
+    return cssFilesAddedArray;
+};
+
+
+TNZ.JSLib.requireLoadEvent(['/global/geolocation.js', 'docready','jqready'], function() {
+    if(TNZ.GeoLocation.getSessionCountryCode() === 'TW'){
+        //Then user is currently viewing from Taiwan
+        setTimeout(function(){
+            TNZNotificationCSS();
+            TNZNotification();
+        },2000);
+    }
+});
+
+//For proxied page from DAN only.
+TNZ.JSLib.requireLoadEvent([ 'global.geolocation','docready','jqready'], function() {
+    if(TNZ.DTM.getVar('isProxy') === "true"){
+        if(TNZ.GeoLocation.getCountryCode() === 'TW'){
+            setTimeout(function(){
+                TNZNotificationCSS();
+                TNZNotification();
+            },2000);
+        }
+    }
+}); 
+
+/*
+//Close box, reset height
+$notificationHeader.on('click','#notification-close-btn',function(){
+    $notificationHeader.remove();
+    var $header             = $('#sticky-header');
+    var header_height = $header.outerHeight();
+    $('#js-global-header').height(-header_height);
+    $header.css('top', 0);
+    TNZ.EventManager.trigger("TNZ.Resize.End");//Trigger rezise event which will remove excess black space in meganav
+});
+*/

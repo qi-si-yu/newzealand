@@ -1,0 +1,29 @@
+_satellite.pushAsyncScript(function(event, target, $variables){
+  /*
+window._fbsdkloaded = false;
+window.fbAsyncInit = function(){
+
+  FB.init({
+    appId   : 255167131194760,
+    version : 'v2.9',
+    cookie  : true, // enable cookies to allow the server to access the session 
+    oauth	: true, // OAuth 2.0
+    status  : true, // check login status 
+    xfbml   : false // parse XFBML. Affects dom performance. Unless you have social links on page. Set it at Module level or do FB.XFBML.parse() 
+  });
+
+  //TNZ.EventManager.trigger( 'FacebookSDK.Load.Success' );
+  window._fbsdkloaded = true;
+};
+*/
+
+/*
+(function(d, s, id){
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/"+_satellite.getVar('facebookMarket')+"/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);						
+}(document, "script", "facebook-jssdk"));
+*/
+});
