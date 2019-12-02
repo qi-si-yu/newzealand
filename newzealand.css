@@ -1,4 +1,14 @@
-nav ul li{
+.dhlk {
+  list-style-type: none;
+  display: inline;
+  color: white;
+}
+.dhl {
+  list-style-type: none;
+  display: inline;
+  color: white;
+}
+.dh {
   list-style-type: none;
   display: inline;
   color: white;
@@ -17,4 +27,33 @@ li {
 }
 div ul li {
   display: inline;
+}
+.sywz {
+  float: left;
+}
+.sy {
+  list-style-type: none;
+  display: inline;
+  color: white;
+}
+.wx {
+  list-style-type: none;
+  display: block;
+  color: white;
+}
+.bottom {
+  background-color: black;
+  height: 15pc;
+}
+#di {
+  font-weight: 100%;
+  color: white;
+  margin-top: 150px;
+  margin-left: 450px;
+}
+a{
+  color: #0093de;
+}
+. {
+  color: #0093de;
 }
