@@ -1,3 +1,9 @@
+.iconhome {
+  color: #0093de;
+  margin-left: 225px;
+  color: white;
+  height: 20px;
+}
 .dhlk {
   list-style-type: none;
   display: inline;
@@ -16,6 +22,17 @@
 #top {
   background-color: black;
 }
+#sun {
+  margin-top: 20px;
+}
+#toppic{
+  display: block;
+  margin-top: 20px;
+  margin-left: 175px;
+  padding-left: 65px;
+  padding-top: 20px;
+  padding-bottom: 25px;
+}
 li {
   display: inline;
 }
@@ -25,6 +42,7 @@ li {
 #pho {
   color: white;
 }
+.dhl
 div ul li {
   display: inline;
 }
@@ -54,6 +72,7 @@ div ul li {
 a{
   color: #0093de;
 }
-. {
-  color: #0093de;
-}
+
+
+
+
