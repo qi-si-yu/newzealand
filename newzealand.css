@@ -72,7 +72,32 @@ div ul li {
 a{
   color: #0093de;
 }
-
-
-
-
+.juzhong {
+  text-align: center;
+  font-size: 30px;
+  padding-top: 20px;
+}
+.juzh {
+  text-align: center;
+  padding: 10px;
+  padding-bottom: 40px;
+}
+.jzlan {
+  text-align: center;
+  padding: 20px;
+}
+.jz {
+  color: #0093de;
+}
+.icontnz-car {
+  width: 100px;
+}
+.icontnz-weather {
+  width: 100px;
+}
+.icontnz-accommodation {
+  width: 100px;
+}
+.icontnz-bus {
+  width: 100px;
+}
